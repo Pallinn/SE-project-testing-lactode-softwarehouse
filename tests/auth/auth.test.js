@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 
 const baseURL = 'https://lactode-software-house-frontend.vercel.app/';
 
-// 🔧 helper: generate user
 function generateUser() {
   const timestamp = Date.now();
   return {
@@ -15,7 +14,6 @@ function generateUser() {
   };
 }
 
-// 🔧 helper: go to register page
 async function goToRegister(page) {
   await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
   await page.getByRole('link', { name: 'Login' }).click();
@@ -29,7 +27,6 @@ async function goToRegister(page) {
   await expect(emailInput).toBeEditable();
 }
 
-// 🔧 helper: fill form
 async function fillRegisterForm(page, user, agreePolicy = true) {
   await page.getByRole('textbox', { name: 'First Name' }).fill(user.firstName);
   await page.getByRole('textbox', { name: 'Last Name' }).fill(user.lastName);
@@ -43,7 +40,6 @@ async function fillRegisterForm(page, user, agreePolicy = true) {
   }
 }
 
-// 🔧 helper: submit
 async function submitRegister(page) {
   const btn = page.getByRole('button', { name: 'Sign Up' });
 
@@ -56,6 +52,8 @@ async function submitRegister(page) {
 // ---------------- TESTS ----------------
 
 test.describe('Registration and login', () => {
+
+  //valid regis
 
   test('should register a user', async ({ page }) => {
     const user = generateUser();
@@ -70,6 +68,8 @@ test.describe('Registration and login', () => {
     ).toBeVisible({ timeout: 5000 });
   });
 
+  //invalid regis
+  
   test('should show error when email exists', async ({ page }) => {
     const user = generateUser();
 
@@ -117,6 +117,36 @@ test.describe('Registration and login', () => {
     ).toBeDisabled();
   });
 
+  test('invalid email format', async ({ page }) => {
+    const user = generateUser();
+
+    await goToRegister(page);
+    await fillRegisterForm(page, {
+      ...generateUser(),
+      email: 'invalid_email'
+    });
+
+    await expect(
+      page.getByText('Please enter a valid email.')
+    ).toBeVisible();
+  });
+
+  test('invalid phone format', async ({ page }) => {
+    const user = generateUser();
+
+    await goToRegister(page);
+    await fillRegisterForm(page, {
+      ...generateUser(),
+      email: 'invalid_email'
+    });
+
+    await expect(
+      page.getByText('Telephone number must be in')
+    ).toBeDisabled();
+  });
+
+  //valid LOGIN
+
   test('should login', async ({ page }) => {
     await page.goto(baseURL);
 
@@ -129,6 +159,16 @@ test.describe('Registration and login', () => {
 
     // ✅ รอให้ redirect เสร็จ
     await expect(page.getByRole('link', { name: 'user' })).toBeVisible();
+  });
+
+  //INVALID LOGIN
+
+  test('LOGIN no field provided', async ({ page }) => {
+    await page.goto(baseURL);
+    await page.getByRole('link', { name: 'Login' }).click();
+    await page.getByRole('button', { name: 'Sign In' }).click();
+
+    await expect(page.getByText('Please provide your email/')).toBeVisible();
   });
 
 });
