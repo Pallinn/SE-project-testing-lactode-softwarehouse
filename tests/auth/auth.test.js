@@ -5,9 +5,9 @@ const baseURL = 'https://lactode-software-house-frontend.vercel.app/';
 function generateUser() {
   const timestamp = Date.now();
   return {
-    firstName: 'humYai',
-    lastName: 'Hum Lek',
-    username: `Hum${Math.floor(Math.random() * 1000)}`,
+    firstName: 'FN',
+    lastName: 'LN',
+    username: `test${Math.floor(Math.random() * 1000)}`,
     email: `test_${timestamp}@mail.com`,
     phone: `123-456-${Math.floor(Math.random() * 9000 + 1000)}`,
     password: '123456'
