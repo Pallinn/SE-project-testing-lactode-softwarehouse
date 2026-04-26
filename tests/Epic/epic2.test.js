@@ -1,7 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { request } from 'node:http';
-import { describe } from 'node:test';
-import { rootCertificates } from 'node:tls';
 
 const baseURL = 'https://lactode-software-house-frontend.vercel.app/';
 
