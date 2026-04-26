@@ -66,10 +66,10 @@ async function login(page,email) {
     page.getByRole('button', { name: 'Sign In' }).click()
     ]);
 
-    // 🔥 รอให้ browser set cookie / localStorage เสร็จ
-    await page.waitForLoadState('networkidle');
+    // // 🔥 รอให้ browser set cookie / localStorage เสร็จ
+    // await page.waitForLoadState('networkidle');
 
-    // 🔥 confirm login success
+    //confirm login success
     await expect(
         page.getByRole('button', { name: 'Logout' })
     ).toBeVisible();
