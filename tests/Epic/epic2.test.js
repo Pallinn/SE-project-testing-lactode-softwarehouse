@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { describe } from 'node:test';
 import { rootCertificates } from 'node:tls';
 
 const baseURL = 'https://lactode-software-house-frontend.vercel.app/';
@@ -142,7 +143,7 @@ async function cleanUp(request,hotelID,roomID){
 }
 
 test.describe('Epice 2-1 Hotel Owner can create new room',()=>{
-    test.only('TC8-1 Hotel owner create new room succesfully',async({page,request})=>{
+    test('TC8-1 Hotel owner create new room succesfully',async({page,request})=>{
         let roomID = null;
         let hotelID = null;
         try{
@@ -162,6 +163,191 @@ test.describe('Epice 2-1 Hotel Owner can create new room',()=>{
             await expect(page.getByText('available :')).toBeVisible();
             await expect(page.getByText('max 2 adults')).toBeVisible();
             await expect(roomID).not.toBeNull();
+        }finally{
+            await cleanUp(request,hotelID,roomID);
+        }
+    });
+
+    test('TC8-2 Hotel owner create new room unsuccesfully : room type is empty',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+
+            //create room
+            await page.goto(`${baseURL}owner/hotels/${hotelID}`);
+
+            await page.getByRole('link', { name: 'Create Room' }).click();
+            //await page.getByLabel('Room TypeSelect room').selectOption('double');
+            await page.getByPlaceholder('10').fill('2');
+            await page.getByPlaceholder('4').fill('2');
+            await page.getByPlaceholder('2').fill('2');
+            await page.getByPlaceholder('500').fill('1200');
+            await page.getByLabel('Bed TypeSelect bed').selectOption('double');
+            await page.getByRole('textbox', { name: 'Description' }).fill('description');
+
+            await page.waitForTimeout(1000);
+            await page.getByRole('button', { name: 'create' }).click();
+
+            //check
+            await expect(page.getByText('Please select room type.')).toBeVisible();
+            await expect(roomID).toBeNull();
+        }finally{
+            await cleanUp(request,hotelID,roomID);
+        }
+    });
+
+    test('TC8-3 Hotel owner create new room unsuccesfully : room amount is empty',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+
+            //create room
+            await page.goto(`${baseURL}owner/hotels/${hotelID}`);
+
+            await page.getByRole('link', { name: 'Create Room' }).click();
+            await page.getByLabel('Room TypeSelect room').selectOption('double');
+            // await page.getByPlaceholder('10').fill('2');
+            await page.getByPlaceholder('4').fill('2');
+            await page.getByPlaceholder('2').fill('2');
+            await page.getByPlaceholder('500').fill('1200');
+            await page.getByLabel('Bed TypeSelect bed').selectOption('double');
+            await page.getByRole('textbox', { name: 'Description' }).fill('description');
+
+            await page.waitForTimeout(1000);
+            await page.getByRole('button', { name: 'create' }).click();
+
+            //check
+            await expect(page.getByText('Please enter a valid available number.')).toBeVisible();
+            await expect(roomID).toBeNull();
+        }finally{
+            await cleanUp(request,hotelID,roomID);
+        }
+    });
+
+    test('TC8-4 Hotel owner create new room unsuccesfully : people is empty',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+
+            //create room
+            await page.goto(`${baseURL}owner/hotels/${hotelID}`);
+
+            await page.getByRole('link', { name: 'Create Room' }).click();
+            await page.getByLabel('Room TypeSelect room').selectOption('double');
+            await page.getByPlaceholder('10').fill('2');
+            // await page.getByPlaceholder('4').fill('2');
+            await page.getByPlaceholder('2').fill('2');
+            await page.getByPlaceholder('500').fill('1200');
+            await page.getByLabel('Bed TypeSelect bed').selectOption('double');
+            await page.getByRole('textbox', { name: 'Description' }).fill('description');
+
+            await page.waitForTimeout(1000);
+            await page.getByRole('button', { name: 'create' }).click();
+
+            //check
+            await expect(page.getByText('Please enter valid people per room.')).toBeVisible();
+            await expect(roomID).toBeNull();
+        }finally{
+            await cleanUp(request,hotelID,roomID);
+        }
+    });
+
+    test('TC8-5 Hotel owner create new room unsuccesfully : bed type is not selected',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+
+            //create room
+            await page.goto(`${baseURL}owner/hotels/${hotelID}`);
+
+            await page.getByRole('link', { name: 'Create Room' }).click();
+            await page.getByLabel('Room TypeSelect room').selectOption('double');
+            await page.getByPlaceholder('10').fill('2');
+            await page.getByPlaceholder('4').fill('2');
+            await page.getByPlaceholder('2').fill('2');
+            await page.getByPlaceholder('500').fill('1200');
+            // await page.getByLabel('Bed TypeSelect bed').selectOption('double');
+            await page.getByRole('textbox', { name: 'Description' }).fill('description');
+
+            await page.waitForTimeout(1000);
+            await page.getByRole('button', { name: 'create' }).click();
+
+            //check
+            await expect(page.getByText('Please select bed type.')).toBeVisible();
+            await expect(roomID).toBeNull();
+        }finally{
+            await cleanUp(request,hotelID,roomID);
+        }
+    });
+
+    test('TC8-5 Hotel owner create new room unsuccesfully : bed count > 5',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+
+            //create room
+            await page.goto(`${baseURL}owner/hotels/${hotelID}`);
+
+            await page.getByRole('link', { name: 'Create Room' }).click();
+            await page.getByLabel('Room TypeSelect room').selectOption('double');
+            await page.getByPlaceholder('10').fill('2');
+            await page.getByPlaceholder('4').fill('2');
+            await page.getByPlaceholder('2').fill('6');
+            await page.getByPlaceholder('500').fill('1200');
+            await page.getByLabel('Bed TypeSelect bed').selectOption('double');
+            await page.getByRole('textbox', { name: 'Description' }).fill('description');
+
+            await page.waitForTimeout(1000);
+            await page.getByRole('button', { name: 'create' }).click();
+
+            //check
+            await expect(page.getByText('Cannot have more than 5 bed')).toBeVisible();
+            await expect(roomID).toBeNull();
         }finally{
             await cleanUp(request,hotelID,roomID);
         }
