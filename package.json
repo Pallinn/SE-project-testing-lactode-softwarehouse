@@ -12,5 +12,16 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.59.1"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pallinn/SE-project-testing-lactode-softwarehouse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pallinn/SE-project-testing-lactode-softwarehouse/issues"
+  },
+  "homepage": "https://github.com/Pallinn/SE-project-testing-lactode-softwarehouse#readme"
 }

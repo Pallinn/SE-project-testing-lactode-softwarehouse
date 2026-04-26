@@ -63,7 +63,7 @@ async function login(page,email) {
     await expect(emailInput).toBeVisible();
     await expect(emailInput).toBeEditable();
 
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(1000);
 
     await page.getByRole('textbox', { name: 'Email / Phone' }).fill(email);
     await page.getByRole('textbox', { name: 'Password' }).fill('123456');
@@ -104,6 +104,7 @@ async function createHotel(page,hotel) {
     ]); 
 
     const data = await response.json();
+    console.log(data)
     const hotelID = data.data._id;
 
     return hotelID;
@@ -343,10 +344,10 @@ test.describe('Epic 2-1 Hotel Owner can create new room',()=>{
 
             await page.getByRole('link', { name: 'Create Room' }).click();
             await page.getByLabel('Room TypeSelect room').selectOption('double');
-            await page.getByPlaceholder('10').fill('2');
-            await page.getByPlaceholder('4').fill('2');
-            await page.getByPlaceholder('2').fill('6');
-            await page.getByPlaceholder('500').fill('1200');
+            await page.getByPlaceholder('10').fill('2'); //room Amount
+            await page.getByPlaceholder('4').fill('2'); //people
+            await page.getByPlaceholder('2').fill('6'); //Bed
+            await page.getByPlaceholder('500').fill('1200'); //price
             await page.getByLabel('Bed TypeSelect bed').selectOption('double');
             await page.getByRole('textbox', { name: 'Description' }).fill('description');
 
@@ -394,9 +395,93 @@ test.describe('Epic 2-2 Hotel Owner can view room',()=>{
 
     });
 });
+test.describe('Epice 2-3 Hotel Owner can edit  room',()=>{
+    test('TC10-1 Hotel owner edit room succesfully',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        let newDescription = 'Room with seaside beach view'
+        let newPrice = '2000'
+        let newPeople = '4'
+        let newRoomType = 'Suite'
+        let newBedType = 'Queen'
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+            roomID = await createRoom(page,hotelID);
+
+            await page.goto(`${baseURL}owner/hotels/${hotelID}/rooms/${roomID}`);
+            await page.getByRole('link', { name: 'Edit' }).click();
+
+            await page.getByPlaceholder('500').fill(newPrice);
+            await page.getByPlaceholder('4').fill(newPeople);
+            await page.getByLabel('Room TypeSelect room').selectOption(newRoomType);
+            await page.getByLabel('Bed TypeSelect bed').selectOption(newBedType);
+            await page.getByRole('textbox', { name: 'Description' }).fill(newDescription)
+
+            
+            await page.getByRole('button', { name: 'save change' }).click();
+            await page.waitForTimeout(1000);
+           
+            await expect(page.getByRole('textbox', { name: 'Description' })).toContainText(newDescription);
+            await expect(page.getByText(`${newPrice} baht/day${newPeople} people${newBedType}`)).toBeVisible
+            await expect(page.getByText(`Room Type ${newRoomType}`)).toBeVisible();
+        }finally{
+           try {
+                await cleanUp(hotelID, roomID);
+            } catch (err) {
+                console.error("Cleanup failed:", err);
+            }
+        }
+    });
+    
+});
+
+test.describe('Epice 2-4 Hotel Owner can delete  room',()=>{
+    test('TC11-1 Hotel owner delete room succesfully',async({page,request})=>{
+        let roomID = null;
+        let hotelID = null;
+        try{
+            //admin
+            await login(page,'admin@gmail.com');
+
+            const hotel = generateHotel();
+
+            hotelID = await createHotel(page,hotel);
+
+            await page.getByRole('button', { name: 'Logout' }).click();
+            await login(page,'owner@gmail.com');
+            roomID = await createRoom(page,hotelID);
+            console.log(roomID)
+            await page.goto(`${baseURL}owner/hotels/${hotelID}/rooms/${roomID}`);
+
+            await page.getByRole('button', { name: 'Delete' }).click();
+            await page.getByRole('button', { name: 'Delete' }).nth(1).click();
+
+            await page.waitForTimeout(1000);
+           //TODO : still can't find 
+            await expect(page.getByText('No rooms available for this hotel yet.')).toBeVisible();
+           
+        }finally{
+           try {
+                await cleanUp(hotelID, roomID);
+            } catch (err) {
+                console.error("Cleanup failed:", err);
+            }
+        }
+    });
+    
+});
+
 
 test.describe('Epic 2-5 user can view room',()=>{
-    test('TC10-1 User can view their hotel',async({page,request})=>{
+    test('TC12-1 User can view their hotel',async({page,request})=>{
         await login(page, 'user@gmail.com');
 
         const hotelRes = await request.get(
@@ -429,7 +514,7 @@ test.describe('Epic 2-5 user can view room',()=>{
 });
 
 test.describe('Epic 2-6 Admin can view room',()=>{
-    test('TC11-1 Admin can view their hotel',async({page,request})=>{
+    test('TC13-1 Admin can view their hotel',async({page,request})=>{
         await login(page, 'admin@gmail.com');
 
         const hotelRes = await request.get(
@@ -460,3 +545,4 @@ test.describe('Epic 2-6 Admin can view room',()=>{
 
     });
 });
+
