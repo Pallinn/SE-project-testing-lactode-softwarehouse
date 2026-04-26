@@ -66,9 +66,6 @@ async function login(page,email) {
     page.getByRole('button', { name: 'Sign In' }).click()
     ]);
 
-    // // 🔥 รอให้ browser set cookie / localStorage เสร็จ
-    // await page.waitForLoadState('networkidle');
-
     //confirm login success
     await expect(
         page.getByRole('button', { name: 'Logout' })
@@ -114,9 +111,8 @@ async function createRoom(page,hotelID){
     await page.getByPlaceholder('500').fill('1200');
     await page.getByLabel('Bed TypeSelect bed').selectOption('double');
     await page.getByRole('textbox', { name: 'Description' }).fill('description');
-    await page.getByRole('button', { name: 'create' }).click();
 
-    page.waitForTimeout(1000);
+    await page.waitForTimeout(1000);
 
     const [response] = await Promise.all([
     page.waitForResponse(res =>
