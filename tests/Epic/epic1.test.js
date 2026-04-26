@@ -380,7 +380,7 @@ test.describe('Epic 1-3 Admin can delete hotel',()=>{
 });
 
 test.describe('Epic 1-4 Admin can view all hotel',()=>{
-    test.only('TC4-1 Admin can see all hotels', async ({ page, request }) => {
+    test('TC4-1 Admin can see all hotels', async ({ page, request }) => {
     // login admin
     await login(page, 'admin@gmail.com');
 
@@ -544,10 +544,10 @@ test.describe('Epic 1-5 Hotel owner can edit hotels',()=>{
     });
   });
 
-})
+});
 
 test.describe('Epic 1-6 hotel owner can view their hotel',()=>{
-    test.only('TC6-1 hotel owner can see their hotels', async ({ page, request }) => {
+    test('TC6-1 hotel owner can see their hotels', async ({ page, request }) => {
 
     await login(page,'owner@gmail.com');
     const hotelRes = await request.get(
