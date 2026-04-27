@@ -1,0 +1,160 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "LACTODE SOFEWARE HOUSE" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e10]:
+          - generic [ref=e11]: LACTODE
+          - generic [ref=e12]: SOFEWARE HOUSE
+      - navigation [ref=e13]:
+        - link "Hotel" [ref=e14] [cursor=pointer]:
+          - /url: /hotels
+          - img [ref=e15]
+          - generic [ref=e18]: Hotel
+        - link "My Bookings" [ref=e19] [cursor=pointer]:
+          - /url: /user/bookings
+          - img [ref=e20]
+          - generic [ref=e24]: My Bookings
+        - link "user" [ref=e26] [cursor=pointer]:
+          - /url: /account
+          - img [ref=e27]
+          - generic [ref=e30]: user
+        - button "Logout" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logout
+  - alert [ref=e36]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - paragraph [ref=e39]: Hotel list
+      - heading "Browse and book your next hotel" [level=1] [ref=e40]
+      - paragraph [ref=e41]: Find the right hotel for your next trip. Explore available stays, check the details, and book your dates with ease.
+    - generic [ref=e42]:
+      - article [ref=e43]:
+        - img "test_hotel_9121777231221639" [ref=e45]
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: Bangkok
+            - heading "test_hotel_9121777231221639" [level=2] [ref=e49]
+            - paragraph [ref=e50]: somewhere, Bangkok
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - paragraph [ref=e53]: somewhere
+              - paragraph [ref=e54]: "1234563302"
+              - paragraph [ref=e55]: "Postal code: 10330"
+            - generic [ref=e56]:
+              - generic [ref=e57]:
+                - paragraph [ref=e58]: Booking rule
+                - paragraph [ref=e59]: Up to 3 Nights
+              - link "Detail" [ref=e60] [cursor=pointer]:
+                - /url: /hotels/69ee6578e8371f66e40dbf0c
+                - img [ref=e62]
+                - generic [ref=e65]: Detail
+      - article [ref=e66]:
+        - img "test_hotel_2361777231198115" [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - paragraph [ref=e71]: Bangkok
+            - heading "test_hotel_2361777231198115" [level=2] [ref=e72]
+            - paragraph [ref=e73]: somewhere, Bangkok
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - paragraph [ref=e76]: somewhere
+              - paragraph [ref=e77]: "1234562557"
+              - paragraph [ref=e78]: "Postal code: 10330"
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - paragraph [ref=e81]: Booking rule
+                - paragraph [ref=e82]: Up to 3 Nights
+              - link "Detail" [ref=e83] [cursor=pointer]:
+                - /url: /hotels/69ee6560e8371f66e40dbf0b
+                - img [ref=e85]
+                - generic [ref=e88]: Detail
+      - article [ref=e89]:
+        - img "test_hotel_3061777230995522" [ref=e91]
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - paragraph [ref=e94]: Bangkok
+            - heading "test_hotel_3061777230995522" [level=2] [ref=e95]
+            - paragraph [ref=e96]: somewhere, Bangkok
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - paragraph [ref=e99]: somewhere
+              - paragraph [ref=e100]: "1234564371"
+              - paragraph [ref=e101]: "Postal code: 10330"
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - paragraph [ref=e104]: Booking rule
+                - paragraph [ref=e105]: Up to 3 Nights
+              - link "Detail" [ref=e106] [cursor=pointer]:
+                - /url: /hotels/69ee6495e8371f66e40dbf01
+                - img [ref=e108]
+                - generic [ref=e111]: Detail
+      - article [ref=e112]:
+        - img "test_hotel_3601777230976204" [ref=e114]
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - paragraph [ref=e117]: Bangkok
+            - heading "test_hotel_3601777230976204" [level=2] [ref=e118]
+            - paragraph [ref=e119]: somewhere, Bangkok
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - paragraph [ref=e122]: somewhere
+              - paragraph [ref=e123]: "1234561936"
+              - paragraph [ref=e124]: "Postal code: 10330"
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - paragraph [ref=e127]: Booking rule
+                - paragraph [ref=e128]: Up to 3 Nights
+              - link "Detail" [ref=e129] [cursor=pointer]:
+                - /url: /hotels/69ee6482788434f4979af53b
+                - img [ref=e131]
+                - generic [ref=e134]: Detail
+      - article [ref=e135]:
+        - img "test_hotel_4541777230966024" [ref=e137]
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - paragraph [ref=e140]: Bangkok
+            - heading "test_hotel_4541777230966024" [level=2] [ref=e141]
+            - paragraph [ref=e142]: somewhere, Bangkok
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - paragraph [ref=e145]: somewhere
+              - paragraph [ref=e146]: "1234562676"
+              - paragraph [ref=e147]: "Postal code: 10330"
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - paragraph [ref=e150]: Booking rule
+                - paragraph [ref=e151]: Up to 3 Nights
+              - link "Detail" [ref=e152] [cursor=pointer]:
+                - /url: /hotels/69ee6478788434f4979af53a
+                - img [ref=e154]
+                - generic [ref=e157]: Detail
+      - article [ref=e158]:
+        - img "test_hotel_9621777230955692" [ref=e160]
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - paragraph [ref=e163]: Bangkok
+            - heading "test_hotel_9621777230955692" [level=2] [ref=e164]
+            - paragraph [ref=e165]: somewhere, Bangkok
+          - generic [ref=e166]:
+            - generic [ref=e167]:
+              - paragraph [ref=e168]: somewhere
+              - paragraph [ref=e169]: "1234565378"
+              - paragraph [ref=e170]: "Postal code: 10330"
+            - generic [ref=e171]:
+              - generic [ref=e172]:
+                - paragraph [ref=e173]: Booking rule
+                - paragraph [ref=e174]: Up to 3 Nights
+              - link "Detail" [ref=e175] [cursor=pointer]:
+                - /url: /hotels/69ee646e788434f4979af539
+                - img [ref=e177]
+                - generic [ref=e180]: Detail
+    - generic [ref=e181]:
+      - button "Previous" [disabled] [ref=e182]
+      - generic [ref=e183]: Page 1 of 7
+      - button "Next" [ref=e184]
+```

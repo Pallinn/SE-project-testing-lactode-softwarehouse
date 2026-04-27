@@ -1,0 +1,139 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "LACTODE SOFEWARE HOUSE" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e10]:
+          - generic [ref=e11]: LACTODE
+          - generic [ref=e12]: SOFEWARE HOUSE
+      - navigation [ref=e13]:
+        - link "Admin dashboard" [ref=e14] [cursor=pointer]:
+          - /url: /admin
+          - img [ref=e15]
+          - generic [ref=e19]: Admin dashboard
+        - link "Hotel" [ref=e20] [cursor=pointer]:
+          - /url: /admin/hotels
+          - img [ref=e21]
+          - generic [ref=e24]: Hotel
+        - link "admin" [ref=e26] [cursor=pointer]:
+          - /url: /account
+          - img [ref=e27]
+          - generic [ref=e30]: admin
+        - button "Logout" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logout
+  - alert [ref=e36]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - paragraph [ref=e39]: Admin Dashboard
+      - heading "Welcome back, ad min" [level=1] [ref=e40]
+      - paragraph [ref=e41]: Manage your system and monitor recent activity.
+    - generic [ref=e42]:
+      - heading "Summary" [level=2] [ref=e43]
+      - list [ref=e44]:
+        - listitem [ref=e45]: "Total Bookings: 16"
+        - listitem [ref=e46]: "Total Hotels: 39"
+        - listitem [ref=e47]: "Total Users: 13"
+    - generic [ref=e48]:
+      - heading "Quick Actions" [level=2] [ref=e49]
+      - generic [ref=e50]:
+        - link "Manage Hotel" [ref=e51] [cursor=pointer]:
+          - /url: /admin/hotels
+          - button "Manage Hotel" [ref=e52]:
+            - generic [ref=e53]: Manage Hotel
+        - link "View booking" [ref=e54] [cursor=pointer]:
+          - /url: /admin/bookings
+          - button "View booking" [ref=e55]:
+            - generic [ref=e56]: View booking
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: Booking dashboard
+          - heading "Recent booking" [level=1] [ref=e62]
+        - generic [ref=e63]: 5 bookings
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]: Guest / Hotel
+          - generic [ref=e67]: Dates
+          - generic [ref=e68]: Nights
+          - generic [ref=e69]: Actions
+        - generic [ref=e70]:
+          - generic [ref=e71]:
+            - paragraph [ref=e72]: น้ำหนึ่ง
+            - paragraph [ref=e73]: 67 - 4363373333
+            - paragraph [ref=e74]: hotel owner - owner@gmail.com
+          - generic [ref=e75]:
+            - paragraph [ref=e76]: 5/1/2026
+            - paragraph [ref=e77]: 5/3/2026
+          - generic [ref=e78]: "2"
+          - generic [ref=e79]:
+            - button "Delete" [ref=e80] [cursor=pointer]:
+              - generic [ref=e81]: Delete
+            - link "Edit" [ref=e82] [cursor=pointer]:
+              - /url: /admin/bookings/69ee4d6ac007e7b696c7dc6d/edit
+              - generic [ref=e83]: Edit
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - paragraph [ref=e86]: test_hotel_3061777230995522
+            - paragraph [ref=e87]: Bangkok - 1234564371
+            - paragraph [ref=e88]: uu serr - user@gmail.com
+          - generic [ref=e89]:
+            - paragraph [ref=e90]: 4/26/2026
+            - paragraph [ref=e91]: 4/27/2026
+          - generic [ref=e92]: "1"
+          - generic [ref=e93]:
+            - button "Delete" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: Delete
+            - link "Edit" [ref=e96] [cursor=pointer]:
+              - /url: /admin/bookings/69ee64a1e8371f66e40dbf03/edit
+              - generic [ref=e97]: Edit
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - paragraph [ref=e100]: Hotel booking
+            - paragraph [ref=e101]: Hotel details unavailable
+            - paragraph [ref=e102]: uu serr - user@gmail.com
+          - generic [ref=e103]:
+            - paragraph [ref=e104]: 4/26/2026
+            - paragraph [ref=e105]: 4/27/2026
+          - generic [ref=e106]: "1"
+          - generic [ref=e107]:
+            - button "Delete" [ref=e108] [cursor=pointer]:
+              - generic [ref=e109]: Delete
+            - link "Edit" [ref=e110] [cursor=pointer]:
+              - /url: /admin/bookings/69ee61f7788434f4979af536/edit
+              - generic [ref=e111]: Edit
+        - generic [ref=e112]:
+          - generic [ref=e113]:
+            - paragraph [ref=e114]: Hotel booking
+            - paragraph [ref=e115]: Hotel details unavailable
+            - paragraph [ref=e116]: uu serr - user@gmail.com
+          - generic [ref=e117]:
+            - paragraph [ref=e118]: 4/26/2026
+            - paragraph [ref=e119]: 4/27/2026
+          - generic [ref=e120]: "1"
+          - generic [ref=e121]:
+            - button "Delete" [ref=e122] [cursor=pointer]:
+              - generic [ref=e123]: Delete
+            - link "Edit" [ref=e124] [cursor=pointer]:
+              - /url: /admin/bookings/69ee612e3d261f7c0056e04f/edit
+              - generic [ref=e125]: Edit
+        - generic [ref=e126]:
+          - generic [ref=e127]:
+            - paragraph [ref=e128]: Hotel booking
+            - paragraph [ref=e129]: Hotel details unavailable
+            - paragraph [ref=e130]: uu serr - user@gmail.com
+          - generic [ref=e131]:
+            - paragraph [ref=e132]: 4/26/2026
+            - paragraph [ref=e133]: 4/27/2026
+          - generic [ref=e134]: "1"
+          - generic [ref=e135]:
+            - button "Delete" [ref=e136] [cursor=pointer]:
+              - generic [ref=e137]: Delete
+            - link "Edit" [ref=e138] [cursor=pointer]:
+              - /url: /admin/bookings/69ee603e3d261f7c0056e04a/edit
+              - generic [ref=e139]: Edit
+```

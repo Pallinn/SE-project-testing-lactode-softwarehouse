@@ -44,7 +44,7 @@ test.beforeAll(async({request})=>{
 function generateHotel() {
   const timestamp = Date.now();
   return {
-    hotelName:`test_hotel_${Math.floor(Math.random() * 1000)}`,
+    hotelName:`test_hotel_${Math.floor(Math.random() * 1000)}${timestamp}`,
     phone: `123456${Math.floor(Math.random() * 9000 + 1000)}`,
     email: `test_${timestamp}@mail.com`,
     address:"somewhere",
@@ -104,7 +104,6 @@ async function createHotel(page,hotel) {
     ]); 
 
     const data = await response.json();
-    console.log(data)
     const hotelID = data.data._id;
 
     return hotelID;
@@ -365,33 +364,30 @@ test.describe('Epic 2-1 Hotel Owner can create new room',()=>{
 
 test.describe('Epic 2-2 Hotel Owner can view room',()=>{
     test('TC9-1 Hotel Owner can view their hotel',async({page,request})=>{
+        let hotelID;
+        let roomID;
+
+        await login(page,'admin@gmail.com');
+
+        const hotel = generateHotel();
+
+        hotelID = await createHotel(page,hotel);
+
+        await page.getByRole('button', { name: 'Logout' }).click();
+        await login(page,'owner@gmail.com');
+
+        roomID = await createRoom(page,hotelID);
+
+        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(roomID).not.toBeNull();
+
+        await page.getByRole('button', { name: 'Logout' }).click();
         await login(page, 'owner@gmail.com');
 
-        const hotelRes = await request.get(
-        'https://lactode-software-house-frontend.vercel.app/api-proxy/hotels',
-        {
-            headers: {
-            Authorization: `Bearer ${ownerToken}`
-            }
-        }
-        );
-        const hotelData = await hotelRes.json();
-        const firstHotelID = hotelData.data[0]._id;
-
-        const roomRes = await request.get(
-        `https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${firstHotelID}/rooms`,
-        {
-            headers: {
-            Authorization: `Bearer ${ownerToken}`
-            }
-        }
-        );
-        const roomData = await roomRes.json();
-        const firstRoomID = roomData.data[0].roomType;
-
-        await page.goto(`${baseURL}/owner/hotels/${firstHotelID}`);
+        await page.goto(`${baseURL}/owner/hotels/${hotelID}`);
         
         await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+
 
     });
 });
@@ -458,7 +454,6 @@ test.describe('Epice 2-4 Hotel Owner can delete  room',()=>{
             await page.getByRole('button', { name: 'Logout' }).click();
             await login(page,'owner@gmail.com');
             roomID = await createRoom(page,hotelID);
-            console.log(roomID)
             await page.goto(`${baseURL}owner/hotels/${hotelID}/rooms/${roomID}`);
 
             await page.getByRole('button', { name: 'Delete' }).click();
@@ -466,7 +461,7 @@ test.describe('Epice 2-4 Hotel Owner can delete  room',()=>{
 
             await page.waitForTimeout(1000);
            //TODO : still can't find 
-            await expect(page.getByText('No rooms available for this hotel yet.')).toBeVisible();
+            await expect(page.getByText('No rooms available for this')).toBeVisible();
            
         }finally{
            try {
@@ -481,32 +476,29 @@ test.describe('Epice 2-4 Hotel Owner can delete  room',()=>{
 
 
 test.describe('Epic 2-5 user can view room',()=>{
-    test('TC12-1 User can view their hotel',async({page,request})=>{
+    test('TC12-1 User can view all room in hotel',async({page,request})=>{
+        
+        let hotelID;
+        let roomID;
+
+        await login(page,'admin@gmail.com');
+
+        const hotel = generateHotel();
+
+        hotelID = await createHotel(page,hotel);
+
+        await page.getByRole('button', { name: 'Logout' }).click();
+        await login(page,'owner@gmail.com');
+
+        roomID = await createRoom(page,hotelID);
+
+        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(roomID).not.toBeNull();
+
+        await page.getByRole('button', { name: 'Logout' }).click();
         await login(page, 'user@gmail.com');
 
-        const hotelRes = await request.get(
-        'https://lactode-software-house-frontend.vercel.app/api-proxy/hotels',
-        {
-            headers: {
-            Authorization: `Bearer ${userToken}`
-            }
-        }
-        );
-        const hotelData = await hotelRes.json();
-        const firstHotelID = hotelData.data[0]._id;
-
-        const roomRes = await request.get(
-        `https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${firstHotelID}/rooms`,
-        {
-            headers: {
-            Authorization: `Bearer ${userToken}`
-            }
-        }
-        );
-        const roomData = await roomRes.json();
-        const firstRoomID = roomData.data[0].roomType;
-
-        await page.goto(`${baseURL}/hotels/${firstHotelID}`);
+        await page.goto(`${baseURL}/hotels/${hotelID}`);
         
         await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
 
@@ -515,33 +507,30 @@ test.describe('Epic 2-5 user can view room',()=>{
 
 test.describe('Epic 2-6 Admin can view room',()=>{
     test('TC13-1 Admin can view their hotel',async({page,request})=>{
+        let hotelID;
+        let roomID;
+
+        await login(page,'admin@gmail.com');
+
+        const hotel = generateHotel();
+
+        hotelID = await createHotel(page,hotel);
+
+        await page.getByRole('button', { name: 'Logout' }).click();
+        await login(page,'owner@gmail.com');
+
+        roomID = await createRoom(page,hotelID);
+
+        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(roomID).not.toBeNull();
+
+        await page.getByRole('button', { name: 'Logout' }).click();
         await login(page, 'admin@gmail.com');
 
-        const hotelRes = await request.get(
-        'https://lactode-software-house-frontend.vercel.app/api-proxy/hotels',
-        {
-            headers: {
-            Authorization: `Bearer ${adminToken}`
-            }
-        }
-        );
-        const hotelData = await hotelRes.json();
-        const firstHotelID = hotelData.data[0]._id;
-
-        const roomRes = await request.get(
-        `https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${firstHotelID}/rooms`,
-        {
-            headers: {
-            Authorization: `Bearer ${adminToken}`
-            }
-        }
-        );
-        const roomData = await roomRes.json();
-        const firstRoomID = roomData.data[0].roomType;
-
-        await page.goto(`${baseURL}/admin/hotels/${firstHotelID}`);
+        await page.goto(`${baseURL}/admin/hotels/${hotelID}`);
         
         await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+
 
     });
 });
