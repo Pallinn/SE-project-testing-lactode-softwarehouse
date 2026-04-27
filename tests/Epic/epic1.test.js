@@ -4,6 +4,7 @@ const baseURL = 'https://lactode-software-house-frontend.vercel.app/';
 
 let adminToken=null;
 let ownerToken=null;
+let userToken=null;
 
 test.beforeAll(async({request})=>{
     const response = await request.post('https://lactode-software-house-frontend.vercel.app/api-proxy/auth/login',{
@@ -27,6 +28,19 @@ test.beforeAll(async({request})=>{
 
     const body_owner = await response_owner.json();
     ownerToken = body_owner.token;
+
+    const response_user = await request.post(
+      'https://lactode-software-house-frontend.vercel.app/api-proxy/auth/login',
+      {
+        data: {
+          identifier: 'user@gmail.com',
+          password: '123456'
+        }
+      }
+    );
+
+    const body_user = await response_owner.json();
+    userToken = body_user.token;
 })
 
 function generateHotel() {
@@ -45,45 +59,43 @@ function generateHotel() {
 
 async function login(page,email) {
     await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
-    await page.getByRole('link', { name: 'Login' }).click();
+    await page.getByTestId('navbar-signin').click();
 
-    const emailInput = page.getByRole('textbox', { name: 'Email / Phone' });
+    const emailInput = page.getByTestId('signin-identifier');
     await expect(emailInput).toBeVisible();
     await expect(emailInput).toBeEditable();
 
     await page.waitForTimeout(300);
 
-    await page.getByRole('textbox', { name: 'Email / Phone' }).fill(email);
-    await page.getByRole('textbox', { name: 'Password' }).fill('123456');
+    await page.getByTestId('signin-identifier').fill(email);
+    await page.getByTestId('signin-password').fill('123456');
 
-    await page.getByRole('button', { name: 'Sign In' }).click();
+    await page.getByTestId('signin-submit').click();
 
     //home page ready
     await expect(
-      page.getByRole('button', { name: 'Logout' })
+      page.getByTestId('navbar-logout')
     ).toBeVisible({ timeout: 10000 });
 }
 
 async function createHotel(page,hotel) {
 
-    await page.getByRole('link', { name: 'Hotel', exact: true }).click();
+    await page.getByTestId('navbar-admin-hotels').click();
     await page.getByRole('link', { name: 'create hotel' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(hotel.hotelName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(hotel.phone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(hotel.email);
-    await page.getByRole('textbox', { name: 'Huai Kwang, Central, 342 Rama' }).fill(hotel.address);
-    await page.getByRole('textbox', { name: 'Bangkok' }).fill(hotel.province);
-    await page.getByRole('textbox', { name: '12345' }).fill(hotel.postalCode);
-    await page.getByRole('textbox', { name: 'A beautiful beachfront hotel' }).fill(hotel.description);
-    await page.getByRole('textbox', { name: 'owner@example.com' }).fill('owner@gmail.com');
-    await page.getByRole('button', { name: 'Swimming Pool' }).click();
-    await page.getByRole('button', { name: 'Room Service' }).click();
-    await page.getByRole('button', { name: 'Heating' }).click();
+    await page.getByTestId('hotel-form-name').fill(hotel.hotelName);
+    await page.getByTestId('hotel-form-tel').fill(hotel.phone);
+    await page.getByTestId('hotel-form-email').fill(hotel.email);
+    await page.getByTestId('hotel-form-address').fill(hotel.address);
+    await page.getByTestId('hotel-form-district').fill('Pathumwan');
+    await page.getByTestId('hotel-form-province').fill(hotel.province);
+    await page.getByTestId('hotel-form-postalcode').fill(hotel.postalCode);
+    await page.getByTestId('hotel-form-description').fill(hotel.description);
+    await page.getByTestId('hotel-form-owner-email').fill('owner@gmail.com');
     const [response] = await Promise.all([
     page.waitForResponse(res =>
         res.url().includes('/hotels') && res.request().method() === 'POST'
     ),
-    page.getByRole('button', { name: 'create' }).click()
+    page.getByTestId('hotel-form-submit').click()
     ]); 
 
     const data = await response.json();
@@ -97,19 +109,17 @@ async function createHotelError(page,hotel) {
 
     await page.getByRole('link', { name: 'Hotel', exact: true }).click();
     await page.getByRole('link', { name: 'create hotel' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(hotel.hotelName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(hotel.phone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(hotel.email);
-    await page.getByRole('textbox', { name: 'Huai Kwang, Central, 342 Rama' }).fill(hotel.address);
-    await page.getByRole('textbox', { name: 'Bangkok' }).fill(hotel.province);
-    await page.getByRole('textbox', { name: '12345' }).fill(hotel.postalCode);
-    await page.getByRole('textbox', { name: 'A beautiful beachfront hotel' }).fill(hotel.description);
-    await page.getByRole('textbox', { name: 'owner@example.com' }).fill(hotel.owner);
-    await page.getByRole('button', { name: 'Swimming Pool' }).click();
-    await page.getByRole('button', { name: 'Room Service' }).click();
-    await page.getByRole('button', { name: 'Heating' }).click();
+    await page.getByTestId('hotel-form-name').fill(hotel.hotelName);
+    await page.getByTestId('hotel-form-tel').fill(hotel.phone);
+    await page.getByTestId('hotel-form-email').fill(hotel.email);
+    await page.getByTestId('hotel-form-address').fill(hotel.address);
+    await page.getByTestId('hotel-form-district').fill('Pathumwan');
+    await page.getByTestId('hotel-form-province').fill(hotel.province);
+    await page.getByTestId('hotel-form-postalcode').fill(hotel.postalCode);
+    await page.getByTestId('hotel-form-description').fill(hotel.description);
+    await page.getByTestId('hotel-form-owner-email').fill(hotel.owner);
 
-    page.getByRole('button', { name: 'create' }).click()
+    await page.getByTestId('hotel-form-submit').click();
 }
 
 test.describe('Epic 1-1 Admin can create hotel',() =>{
@@ -193,16 +203,16 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
       let newName = 'Edited Name';
       let newPhone = `123456${Math.floor(Math.random() * 9000 + 1000)}`;
       let newEmail = `test_${timestamp}@mail.com`;
-      await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+      await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
       await page.getByRole('link', { name: 'Edit' }).click();
-      await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-      await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-      await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-      await page.getByRole('button', { name: 'edit' }).click();
+      await page.getByTestId('hotel-form-name').fill(newName);
+      await page.getByTestId('hotel-form-tel').fill(newPhone);
+      await page.getByTestId('hotel-form-email').fill(newEmail);
+      await page.getByTestId('hotel-form-submit').click();
 
       //check
 
-      await expect(page.getByText(newName )).toBeVisible();
+      await expect(page.getByText(newName)).toBeVisible();
 
       await request.delete(`https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${hotelID}`, {
       headers: {
@@ -219,7 +229,7 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
 
       const hotel = generateHotel();
 
-      await createHotelError(page,hotel);
+      const hotelID = await createHotel(page,hotel);
 
       //edit hotel
       let timestamp = Date.now();
@@ -227,16 +237,21 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
       let newName = '';
       let newPhone = `123456${Math.floor(Math.random() * 9000 + 1000)}`;
       let newEmail = `test_${timestamp}@mail.com`;
-      await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+      await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
       await page.getByRole('link', { name: 'Edit' }).click();
-      await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-      await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-      await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-      await page.getByRole('button', { name: 'edit' }).click();
+      await page.getByTestId('hotel-form-name').fill(newName);
+      await page.getByTestId('hotel-form-tel').fill(newPhone);
+      await page.getByTestId('hotel-form-email').fill(newEmail);
+      await page.getByTestId('hotel-form-submit').click();
 
       //check
       await expect(page.getByText('Cannot update hotel :')).toBeVisible();
 
+      await request.delete(`https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${hotelID}`, {
+      headers: {
+        Authorization: `Bearer ${adminToken}`
+      }
+      });
   });
 
   test('TC2-3 Admin cant edit hotel (invalid) : phone is in wrong format',async({page,request})=>{
@@ -245,7 +260,7 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
 
       const hotel = generateHotel();
 
-      await createHotelError(page,hotel);
+      const hotelID = await createHotel(page,hotel);
 
       //edit hotel
       let timestamp = Date.now();
@@ -253,16 +268,21 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
       //phone ahve to be 9-10 degit
       let newPhone = '000'
       let newEmail = `test_${timestamp}@mail.com`;
-      await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+      await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
       await page.getByRole('link', { name: 'Edit' }).click();
-      await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-      await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-      await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-      await page.getByRole('button', { name: 'edit' }).click();
+      await page.getByTestId('hotel-form-name').fill(newName);
+      await page.getByTestId('hotel-form-tel').fill(newPhone);
+      await page.getByTestId('hotel-form-email').fill(newEmail);
+      await page.getByTestId('hotel-form-submit').click();
 
       //check
       await expect(page.getByText('Cannot update hotel :')).toBeVisible();
 
+      await request.delete(`https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${hotelID}`, {
+      headers: {
+        Authorization: `Bearer ${adminToken}`
+      }
+      });
   });
 
   test('TC2-4 Admin cant edit hotel (invalid) : used email',async({page,request})=>{
@@ -271,7 +291,7 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
 
       const hotel = generateHotel();
 
-      await createHotelError(page,hotel);
+      const hotelID = await createHotel(page,hotel);
 
       //edit hotel
       let timestamp = Date.now();
@@ -279,16 +299,21 @@ test.describe('Epic 1-2 Admin can edit hotel',()=>{
       let newPhone = `123456${Math.floor(Math.random() * 9000 + 1000)}`;
       //used email
       let newEmail = 'silkroadhotel_21@gmail.com';
-      await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+      await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
       await page.getByRole('link', { name: 'Edit' }).click();
-      await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-      await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-      await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-      await page.getByRole('button', { name: 'edit' }).click();
+      await page.getByTestId('hotel-form-name').fill(newName);
+      await page.getByTestId('hotel-form-tel').fill(newPhone);
+      await page.getByTestId('hotel-form-email').fill(newEmail);
+      await page.getByTestId('hotel-form-submit').click();
 
       //check
       await expect(page.getByText('Cannot update hotel :')).toBeVisible();
 
+      await request.delete(`https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${hotelID}`, {
+      headers: {
+        Authorization: `Bearer ${adminToken}`
+      }
+      });
   });
 });
 
@@ -301,7 +326,7 @@ test.describe('Epic 1-3 Admin can delete hotel',()=>{
 
       const hotelID = await createHotel(page,hotel);
 
-      await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+      await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
       await page.getByRole('button', { name: 'Delete' }).click();
       await page.getByRole('button', { name: 'Delete' }).nth(1).click(); 
   });
@@ -319,24 +344,26 @@ test.describe('Epic 1-3 Admin can delete hotel',()=>{
       hotelID = await createHotel(page,hotel);
 
       //create room
-      await page.getByRole('article').filter({ hasText: hotel.hotelName }).getByRole('link').click();
+      await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
       await page.getByRole('link', { name: 'Create Room' }).click();
-      await page.getByLabel('Room TypeSelect room').selectOption('double');
-      await page.getByPlaceholder('500').fill('500');
-      await page.getByLabel('Bed TypeSelect bed').selectOption('single');
-      await page.getByPlaceholder('10').fill('2');
-      await page.getByPlaceholder('4').fill('2');
-      await page.getByPlaceholder('2').fill('1');
-      await page.getByRole('textbox', { name: 'Description' }).fill('nothing');
+      await page.getByTestId('room-form-room-type').selectOption('double');
+      await page.getByTestId('room-form-price').fill('2500');
+      await page.getByTestId('room-form-bed-type').selectOption('double');
+      await page.getByTestId('room-form-amount').fill('5');
+      await page.getByTestId('room-form-people').fill('2');
+      await page.getByTestId('room-form-bed-count').fill('2');
+      await page.getByTestId('room-form-description').fill('beautiful room');
+      await page.getByTestId('room-form-facility-minibar').click();
+      await page.getByTestId('room-form-facility-hair-dryer').click();
       await Promise.all([
         page.waitForResponse(res =>
           res.url().includes('/rooms') && res.request().method() === 'POST'
         ),
-        page.getByRole('button', { name: 'create' }).click()
+        page.getByTestId('room-form-submit').click()
       ]);
 
       //logout
-      await page.getByRole('button', { name: 'Logout' }).click();
+      await page.getByTestId('navbar-logout').click();
 
       //user
       await login(page,'user@gmail.com');
@@ -364,7 +391,7 @@ test.describe('Epic 1-3 Admin can delete hotel',()=>{
       bookingID = data.data._id;
 
       //logout
-      await page.getByRole('button', { name: 'Logout' }).click();
+      await page.getByTestId('navbar-logout').click();
 
       //admin
       await login(page,'admin@gmail.com');
@@ -417,10 +444,10 @@ test.describe('Epic 1-4 Admin can view all hotel',()=>{
     const firstHotelName = hotelData.data[0].name;
 
     // ไปหน้า hotel list
-    await page.getByRole('link', { name: 'Hotel', exact: true }).click();
+    await page.getByTestId('navbar-admin-hotels').click();
 
     // ✅ check ว่าเห็น hotel ที่สร้าง
-    await expect(page.getByText(firstHotelName)).toBeVisible();
+    await expect(page.getByRole('heading', { name:firstHotelName })).toBeVisible();
   });
 });
 
@@ -434,21 +461,23 @@ test.describe('Epic 1-5 Hotel owner can edit hotels',()=>{
     const hotelID = await createHotel(page,hotel);
 
     //logout
-    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.getByTestId('navbar-logout').click();
 
     //owner
     await login(page,'owner@gmail.com');
+    await page.getByTestId('navbar-owner-dashboard').click();
+    await page.getByRole('button', { name: 'Manage Hotel' }).click();
 
     let timestamp = Date.now();
     let newName = 'Edited Name';
     let newPhone = `123456${Math.floor(Math.random() * 9000 + 1000)}`;
     let newEmail = `test_${timestamp}@mail.com`;
-    await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+    await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
     await page.getByRole('link', { name: 'Edit' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-    await page.getByRole('button', { name: 'edit' }).click();
+    await page.getByTestId('hotel-form-name').fill(newName);
+    await page.getByTestId('hotel-form-tel').fill(newPhone);
+    await page.getByTestId('hotel-form-email').fill(newEmail);
+    await page.getByTestId('hotel-form-submit').click();
 
     //check
 
@@ -468,24 +497,25 @@ test.describe('Epic 1-5 Hotel owner can edit hotels',()=>{
     const hotelID = await createHotel(page,hotel);
 
     //logout
-    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.getByTestId('navbar-logout').click();
 
     //owner
     await login(page,'owner@gmail.com');
+    await page.getByTestId('navbar-owner-dashboard').click();
+    await page.getByRole('button', { name: 'Manage Hotel' }).click();
 
     let timestamp = Date.now();
     let newName = '';
     let newPhone = `123456${Math.floor(Math.random() * 9000 + 1000)}`;
     let newEmail = `test_${timestamp}@mail.com`;
-    await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+    await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
     await page.getByRole('link', { name: 'Edit' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-    await page.getByRole('button', { name: 'edit' }).click();
+    await page.getByTestId('hotel-form-name').fill(newName);
+    await page.getByTestId('hotel-form-tel').fill(newPhone);
+    await page.getByTestId('hotel-form-email').fill(newEmail);
+    await page.getByTestId('hotel-form-submit').click();
 
     //check
-
     await expect(page.getByText('Cannot update hotel')).toBeVisible();
     await request.delete(`https://lactode-software-house-frontend.vercel.app/api-proxy/hotels/${hotelID}`, {
       headers: { Authorization: `Bearer ${adminToken}` }
@@ -501,21 +531,23 @@ test.describe('Epic 1-5 Hotel owner can edit hotels',()=>{
     const hotelID = await createHotel(page,hotel);
 
     //logout
-    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.getByTestId('navbar-logout').click();
 
     //owner
     await login(page,'owner@gmail.com');
+    await page.getByTestId('navbar-owner-dashboard').click();
+    await page.getByRole('button', { name: 'Manage Hotel' }).click();
 
     let timestamp = Date.now();
     let newName = 'Edited Name';
     let newPhone = '1234';
     let newEmail = `test_${timestamp}@mail.com`;
-    await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+    await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
     await page.getByRole('link', { name: 'Edit' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-    await page.getByRole('button', { name: 'edit' }).click();
+    await page.getByTestId('hotel-form-name').fill(newName);
+    await page.getByTestId('hotel-form-tel').fill(newPhone);
+    await page.getByTestId('hotel-form-email').fill(newEmail);
+    await page.getByTestId('hotel-form-submit').click();
 
     //check
 
@@ -534,21 +566,23 @@ test.describe('Epic 1-5 Hotel owner can edit hotels',()=>{
     const hotelID = await createHotel(page,hotel);
 
     //logout
-    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.getByTestId('navbar-logout').click();
 
     //owner
     await login(page,'owner@gmail.com');
+    await page.getByTestId('navbar-owner-dashboard').click();
+    await page.getByRole('button', { name: 'Manage Hotel' }).click();
 
     let timestamp = Date.now();
     let newName = 'Edited Name';
     let newPhone = `123456${Math.floor(Math.random() * 9000 + 1000)}`;
     let newEmail = `silkroadhotel_21@gmail.com`;
-    await page.getByRole('article').filter({ hasText:hotel.hotelName }).getByRole('link').click();
+    await page.getByTestId(`hotel-card-${hotelID}-detail`).click();
     await page.getByRole('link', { name: 'Edit' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(newName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(newPhone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(newEmail);
-    await page.getByRole('button', { name: 'edit' }).click();
+    await page.getByTestId('hotel-form-name').fill(newName);
+    await page.getByTestId('hotel-form-tel').fill(newPhone);
+    await page.getByTestId('hotel-form-email').fill(newEmail);
+    await page.getByTestId('hotel-form-submit').click();
 
     //check
 
@@ -577,9 +611,34 @@ test.describe('Epic 1-6 hotel owner can view their hotel',()=>{
     const firstHotelName = hotelData.data[0].name;
     
     // ไปหน้า hotel list
-    await page.getByRole('link', { name: 'Hotel' }).click();
+    await page.getByTestId('navbar-owner-dashboard').click();
+    await page.getByRole('button', { name: 'Manage Hotel' }).click();
 
     // ✅ check ว่าเห็น hotel ที่สร้าง
-    await expect(page.getByText(firstHotelName)).toBeVisible();
+    await expect(page.getByRole('heading', { name:firstHotelName })).toBeVisible();
+    });
+});
+
+test.describe('Epic 1-7 user can view their hotel',()=>{
+    test('TC7-1 user can see their hotels', async ({ page, request }) => {
+
+    await login(page,'user@gmail.com');
+    const hotelRes = await request.get(
+      'https://lactode-software-house-frontend.vercel.app/api-proxy/hotels',
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`
+        }
+      }
+    );
+
+    const hotelData = await hotelRes.json();
+    const firstHotelName = hotelData.data[0].name;
+    
+    // ไปหน้า hotel list
+    await page.getByTestId('navbar-hotels').click();
+
+    // ✅ check ว่าเห็น hotel ที่สร้าง
+    await expect(page.getByRole('heading', { name:firstHotelName })).toBeVisible();
     });
 });

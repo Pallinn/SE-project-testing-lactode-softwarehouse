@@ -432,7 +432,7 @@ test.describe('Epice 2-3 Hotel Owner can edit  room',()=>{
            try {
                 await cleanUp(hotelID, roomID);
             } catch (err) {
-                console.error("Cleanup failed:", err);
+                // console.error("Cleanup failed:", err);
             }
         }
     });
@@ -467,7 +467,7 @@ test.describe('Epice 2-4 Hotel Owner can delete  room',()=>{
            try {
                 await cleanUp(hotelID, roomID);
             } catch (err) {
-                console.error("Cleanup failed:", err);
+                // console.error("Cleanup failed:", err);
             }
         }
     });
