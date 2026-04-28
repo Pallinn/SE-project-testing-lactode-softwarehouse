@@ -111,14 +111,16 @@ async function createHotel(page,hotel) {
 async function createRoom(page,hotelID){
     await page.goto(`${baseURL}owner/hotels/${hotelID}`);
 
-    await page.getByRole('link', { name: 'Create Room' }).click();
-    await page.getByLabel('Room TypeSelect room').selectOption('double');
-    await page.getByPlaceholder('10').fill('2');
-    await page.getByPlaceholder('4').fill('2');
-    await page.getByPlaceholder('2').fill('2');
-    await page.getByPlaceholder('500').fill('1200');
-    await page.getByLabel('Bed TypeSelect bed').selectOption('double');
-    await page.getByRole('textbox', { name: 'Description' }).fill('description');
+      await page.getByRole('link', { name: 'Create Room' }).click();
+
+    await page.getByTestId('room-form-room-type').selectOption('double');
+    await page.getByTestId('room-form-amount').fill('2');
+    await page.getByTestId('room-form-people').fill('2');
+    await page.getByTestId('room-form-bed-count').fill('2');
+    await page.getByTestId('room-form-price').fill('1200');
+    await page.getByTestId('room-form-bed-type').selectOption('double');
+    await page.getByTestId('room-form-description').fill('nice room');
+    await page.getByTestId('room-form-facility-tv').click();
 
     await page.waitForTimeout(1000);
 
@@ -126,7 +128,7 @@ async function createRoom(page,hotelID){
     page.waitForResponse(res =>
         res.url().includes('/rooms') && res.request().method() === 'POST'
     ),
-    page.getByRole('button', { name: 'create' }).click()
+    page.getByTestId('room-form-submit').click()
     ]); 
 
     const data = await response.json();
@@ -315,7 +317,7 @@ test.describe('Epic 2-1 Hotel Owner can create new room',()=>{
             await page.getByRole('button', { name: 'create' }).click();
 
             //check
-            await expect(page.getByText('Please select bed type.')).toBeVisible();
+            await expect(page.getByTestId('room-form-message')).toBeVisible();
             await expect(roomID).toBeNull();
         }finally{
             await cleanUp(request,hotelID,roomID);
@@ -376,7 +378,7 @@ test.describe('Epic 2-2 Hotel Owner can view room',()=>{
 
         roomID = await createRoom(page,hotelID);
 
-        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(page.getByTestId(`room-card-${roomID}`)).toBeVisible();
         await expect(roomID).not.toBeNull();
 
         await page.getByRole('button', { name: 'Logout' }).click();
@@ -384,9 +386,9 @@ test.describe('Epic 2-2 Hotel Owner can view room',()=>{
 
         await page.goto(`${baseURL}/owner/hotels/${hotelID}`);
         
-        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(page.getByTestId(`room-card-${roomID}`)).toBeVisible();
 
-
+        await cleanUp(request,hotelID,roomID);
     });
 });
 test.describe('Epice 2-3 Hotel Owner can edit  room',()=>{
@@ -428,7 +430,7 @@ test.describe('Epice 2-3 Hotel Owner can edit  room',()=>{
             await expect(page.getByText(`Room Type ${newRoomType}`)).toBeVisible();
         }finally{
            try {
-                await cleanUp(hotelID, roomID);
+                await cleanUp(request,hotelID, roomID);
             } catch (err) {
                 // console.error("Cleanup failed:", err);
             }
@@ -463,7 +465,7 @@ test.describe('Epice 2-4 Hotel Owner can delete  room',()=>{
            
         }finally{
            try {
-                await cleanUp(hotelID, roomID);
+                await cleanUp(request,hotelID, roomID);
             } catch (err) {
                 // console.error("Cleanup failed:", err);
             }
@@ -490,7 +492,7 @@ test.describe('Epic 2-5 user can view room',()=>{
 
         roomID = await createRoom(page,hotelID);
 
-        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(page.getByTestId(`room-card-${roomID}`)).toBeVisible();
         await expect(roomID).not.toBeNull();
 
         await page.getByRole('button', { name: 'Logout' }).click();
@@ -498,13 +500,15 @@ test.describe('Epic 2-5 user can view room',()=>{
 
         await page.goto(`${baseURL}/hotels/${hotelID}`);
         
-        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(page.getByTestId(`room-card-${roomID}`)).toBeVisible();
+
+        await cleanUp(request,hotelID,roomID);
 
     });
 });
 
 test.describe('Epic 2-6 Admin can view room',()=>{
-    test('TC13-1 Admin can view their hotel',async({page,request})=>{
+    test('TC13-1 Admin can view rooms',async({page,request})=>{
         let hotelID;
         let roomID;
 
@@ -519,7 +523,7 @@ test.describe('Epic 2-6 Admin can view room',()=>{
 
         roomID = await createRoom(page,hotelID);
 
-        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(page.getByTestId(`room-card-${roomID}`)).toBeVisible();
         await expect(roomID).not.toBeNull();
 
         await page.getByRole('button', { name: 'Logout' }).click();
@@ -527,9 +531,9 @@ test.describe('Epic 2-6 Admin can view room',()=>{
 
         await page.goto(`${baseURL}/admin/hotels/${hotelID}`);
         
-        await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
+        await expect(page.getByTestId(`room-card-${roomID}`)).toBeVisible();
 
-
+        await cleanUp(request,hotelID,roomID);
     });
 });
 
