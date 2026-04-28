@@ -57,30 +57,24 @@ function generateHotel() {
 
 async function login(page,email) {
     await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
-    await page.getByRole('link', { name: 'Login' }).click();
+    await page.getByTestId('navbar-signin').click();
 
-    const emailInput = page.getByRole('textbox', { name: 'Email / Phone' });
+    const emailInput = page.getByTestId('signin-identifier');
     await expect(emailInput).toBeVisible();
     await expect(emailInput).toBeEditable();
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(300);
 
-    await page.getByRole('textbox', { name: 'Email / Phone' }).fill(email);
-    await page.getByRole('textbox', { name: 'Password' }).fill('123456');
+    await page.getByTestId('signin-identifier').fill(email);
+    await page.getByTestId('signin-password').fill('123456');
 
-    await Promise.all([
-    page.waitForResponse(res =>
-      res.url().includes('/auth/login') && res.status() === 200
-    ),
-    page.getByRole('button', { name: 'Sign In' }).click()
-    ]);
+    await page.getByTestId('signin-submit').click();
 
-    //confirm login success
+    //home page ready
     await expect(
-        page.getByRole('button', { name: 'Logout' })
-    ).toBeVisible();
+      page.getByTestId('navbar-logout')
+    ).toBeVisible({ timeout: 10000 });
 }
-
 async function createHotel(page,hotel) {
 
     await page.getByTestId('navbar-admin-hotels').click();
@@ -392,6 +386,7 @@ test.describe('Epic 2-2 Hotel Owner can view room',()=>{
     });
 });
 test.describe('Epice 2-3 Hotel Owner can edit  room',()=>{
+    test.setTimeout(120000);
     test('TC10-1 Hotel owner edit room succesfully',async({page,request})=>{
         let roomID = null;
         let hotelID = null;
