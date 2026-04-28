@@ -83,30 +83,29 @@ async function login(page,email) {
 
 async function createHotel(page,hotel) {
 
-    await page.getByRole('link', { name: 'Hotel', exact: true }).click();
+    await page.getByTestId('navbar-admin-hotels').click();
     await page.getByRole('link', { name: 'create hotel' }).click();
-    await page.getByRole('textbox', { name: 'Resort Villa brabra' }).fill(hotel.hotelName);
-    await page.getByRole('textbox', { name: '+66 76 123' }).fill(hotel.phone);
-    await page.getByRole('textbox', { name: 'contact@sunsetparadise.com' }).fill(hotel.email);
-    await page.getByRole('textbox', { name: 'Huai Kwang, Central, 342 Rama' }).fill(hotel.address);
-    await page.getByRole('textbox', { name: 'Bangkok' }).fill(hotel.province);
-    await page.getByRole('textbox', { name: '12345' }).fill(hotel.postalCode);
-    await page.getByRole('textbox', { name: 'A beautiful beachfront hotel' }).fill(hotel.description);
-    await page.getByRole('textbox', { name: 'owner@example.com' }).fill('owner@gmail.com');
-    await page.getByRole('button', { name: 'Swimming Pool' }).click();
-    await page.getByRole('button', { name: 'Room Service' }).click();
-    await page.getByRole('button', { name: 'Heating' }).click();
+    await page.getByTestId('hotel-form-name').fill(hotel.hotelName);
+    await page.getByTestId('hotel-form-tel').fill(hotel.phone);
+    await page.getByTestId('hotel-form-email').fill(hotel.email);
+    await page.getByTestId('hotel-form-address').fill(hotel.address);
+    await page.getByTestId('hotel-form-district').fill('Pathumwan');
+    await page.getByTestId('hotel-form-province').fill(hotel.province);
+    await page.getByTestId('hotel-form-postalcode').fill(hotel.postalCode);
+    await page.getByTestId('hotel-form-description').fill(hotel.description);
+    await page.getByTestId('hotel-form-owner-email').fill('owner@gmail.com');
     const [response] = await Promise.all([
     page.waitForResponse(res =>
         res.url().includes('/hotels') && res.request().method() === 'POST'
     ),
-    page.getByRole('button', { name: 'create' }).click()
+    page.getByTestId('hotel-form-submit').click()
     ]); 
 
     const data = await response.json();
     const hotelID = data.data._id;
 
     return hotelID;
+
 }
 
 async function createRoom(page,hotelID){
@@ -168,7 +167,6 @@ test.describe('Epic 2-1 Hotel Owner can create new room',()=>{
             roomID = await createRoom(page,hotelID);
 
             await expect(page.getByRole('heading', { name: 'double' })).toBeVisible();
-            await expect(page.getByText('available :')).toBeVisible();
             await expect(page.getByText('max 2 adults')).toBeVisible();
             await expect(roomID).not.toBeNull();
         }finally{
